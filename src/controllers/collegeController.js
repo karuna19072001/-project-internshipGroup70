@@ -14,11 +14,16 @@ const createCollegedata = async function (req, res) {  //In this block create co
 const getcollegeData = async function (req, res) {   //In this block get college data with college intership candidate
     try {
         let filter = req.query
-        if(Object.keys(filter).length==0)  return res.status(400).send({status:false,msg:"filters are required"})
+        if(Object.keys(filter).length==0)  
+        return res.status(400).send({status:false,msg:"filter are required"})
+        
+        let collegename= await CollegeModel.findOne(filter)
+        if(!collegename) 
+        return res.status(400).send("college not found")
 
         let college = await CollegeModel.findOne(filter).select({ isDeleted:0,createdAt:0,updatedAt:0,__v: 0})
+
         let intershipData=JSON.parse(JSON.stringify(college))
-        if(college.length==0) return res.status(404).send({status:false,msg:"no intern found"})
     
         let internData=await InternModel.find({collegeId:college._id}).select({ isDeleted:0,createdAt:0,updatedAt:0,__v: 0,collegeId:0})
 
