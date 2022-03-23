@@ -26,6 +26,7 @@ const getcollegeData = async function (req, res) {   //In this block get college
         let intershipData=JSON.parse(JSON.stringify(college))
     
         let internData=await InternModel.find({collegeId:college._id}).select({ isDeleted:0,createdAt:0,updatedAt:0,__v: 0,collegeId:0})
+        if (Object.keys(internData).length == 0) return res.status(400).send("interndata not found")
 
         intershipData.intersts = [...internData]
         res.status(200).send({ status: true, data:intershipData})
